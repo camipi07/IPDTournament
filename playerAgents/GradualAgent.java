@@ -54,10 +54,6 @@ public class GradualAgent extends Agent {
 
 	}
 
-	protected void takeDown() {
-		System.out.println("RandomPlayer " + getAID().getName() + " terminating.");
-	}
-
 	private enum State {
 		s0NoConfig, s1AwaitingGame, s2Round, s3AwaitingResult
 	}

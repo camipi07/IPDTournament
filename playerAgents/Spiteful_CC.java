@@ -35,7 +35,7 @@ public class Spiteful_CC extends Agent {
             fe.printStackTrace();
         }
         addBehaviour(new Play());
-        System.out.println("PavlovAgent " + getAID().getName() + " is ready.");
+        System.out.println("SpitefulCCAgent " + getAID().getName() + " is ready.");
 
     }
 
