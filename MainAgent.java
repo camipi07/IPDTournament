@@ -40,7 +40,9 @@ public class MainAgent extends Agent {
 	private MainAgent ma = this;
 	private boolean paused=false;
 
-
+	/**
+     * Sets the paused flag to true
+     */
 	public void getPaused(){
 		this.paused = true;
 	}
@@ -59,7 +61,9 @@ public class MainAgent extends Agent {
 		
 
 	}
-
+	/**
+     * Resets the player statistics
+     */
 	public void resetPlayers() { // reset all player stats
 
 		for (AID a : playerStats.keySet()) {
@@ -69,6 +73,9 @@ public class MainAgent extends Agent {
 
 	}
 
+	/**
+     * Updates the player list for the game beginning
+     */
 	public int updatePlayers() {
 		gui.logLine("Updating player list");
 		DFAgentDescription template = new DFAgentDescription();
@@ -100,7 +107,12 @@ public class MainAgent extends Agent {
 
 		return 0;
 	}
-
+	/**
+     * Removes the agent from all data structures and updates the GUI
+     *
+     * @param name of the agent that will be eliminated
+     * @return true if the agent existed, false otherwise
+     */
 	public boolean removeAgent(String agentName) {
 		// removes the agent from the stats map and the player array
 		ArrayList<AID> playersList = new ArrayList<AID>(Arrays.asList(playerAgents));
@@ -188,7 +200,13 @@ public class MainAgent extends Agent {
 			}
 
 		}
-
+		
+		/**
+	     * Builds the Result string according to the format Results#4,7#D,C#5,0.
+	     *
+	     * @param data of the players and the actions they performed, the points for them
+	     * @return the string of results with the proper format
+	     */
 		private String generateResultsString(PlayerInformation player1, PlayerInformation player2, String actionPlayer1,
 				String actionPlayer2, int[] playerPoints) {
 
@@ -218,7 +236,15 @@ public class MainAgent extends Agent {
 			}
 			return results;
 		}
-
+		
+		
+		/**
+	     * Builds the GameOver string according to the format GameOver#4,7#2.5,1.15.
+	     *
+	     * @param data of the players the points for them and the rounds
+	     * @return the string of GameOver with the proper format
+	     */
+		
 		private String generateGameOverString(PlayerInformation player1, PlayerInformation player2, int[] playerPoints,
 				int rounds) {
 			String gameOver = "GameOver#";
@@ -242,6 +268,11 @@ public class MainAgent extends Agent {
 			return gameOver;
 		}
 
+		/**
+	     * Runs a game between 2 players
+	     *
+	     * @param info of the 2 players
+	     */
 		private void playGame(PlayerInformation player1, PlayerInformation player2) {
 			int[] playerPoints = { 0, 0 };
 			double rounds = Math.random() * (parameters.R - parameters.R * 0.9 + 1) + parameters.R * 0.9;

@@ -91,6 +91,8 @@ public class PavlovAgent extends Agent {
                                     System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
                                 }
                                 if (gameStarted) {
+                                	
+                                	//reseting the parameters and changing state
                                 	isFirstRound=true;
                                 	opponentWasLoyal=true;
                                 	state = State.s2Round;
@@ -142,23 +144,35 @@ public class PavlovAgent extends Agent {
                 }
             }
         }
+        
+        /**
+		 * Get the next action for the round
+		 * 
+		 * @param the message containing the actions for this round
+		 * 
+		 */
         private String decideNextAction() {
         	if(opponentWasLoyal) 
-        		return "Action#C";
+        		return "Action#C"; //cooperate
         	else
-        		return "Action#D";
+        		return "Action#D"; //defeat
         	
         }
-        
+        /**
+		 * Stores the opponent last action by indication if he was loyal
+		 * 
+		 * @param the message containing the actions for this round
+		 * 
+		 */
         private void saveLastRoundActions(ACLMessage msg) {
         	//format Results#4,7#D,C#5,0.
         	String msgContent = msg.getContent();
         	String[] contentSplit = msgContent.split("#");
         	String[] lastPlayerMoves = {contentSplit[2].split(",")[0],contentSplit[2].split(",")[1]};
         	
-        	if(lastPlayerMoves[0].equals(lastPlayerMoves[1]))
+        	if(lastPlayerMoves[0].equals(lastPlayerMoves[1])) //CC or DD last round
         		opponentWasLoyal=true;
-        	else
+        	else //unloyal opponent
         		opponentWasLoyal=false;
         	
         	return;

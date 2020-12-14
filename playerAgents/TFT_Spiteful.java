@@ -52,10 +52,6 @@ public class TFT_Spiteful extends Agent {
 
 	}
 
-	protected void takeDown() {
-		System.out.println("RandomPlayer " + getAID().getName() + " terminating.");
-	}
-
 	private enum State {
 		s0NoConfig, s1AwaitingGame, s2Round, s3AwaitingResult
 	}
@@ -138,20 +134,17 @@ public class TFT_Spiteful extends Agent {
 							mode = MODE_TFT; // Changing to mode TFT for the next round
 						} else if (mode == MODE_TFT) {
 							// Playing opponent last action
-							System.out.println("**TFT AGENT IN MODE TFT");
-							System.out.println("***My ID: "+myId);
-							System.out.println("****Saved opponent last action: "+opponentLastActions.get(opponentLastActions.size() - 1));
 							msg.setContent("Action#" + opponentLastActions.get(opponentLastActions.size() - 1));
 							// Check if opponent has defeated 2 consecutive times
-							if ((opponentLastActions.get(opponentLastActions.size() - 1)).equals("D")&& isFirstTFTRound == false) {
+							if ((opponentLastActions.get(opponentLastActions.size() - 1)).equals("D")
+									&& isFirstTFTRound == false) {
 								if (opponentLastActions.get(opponentLastActions.size() - 2).equals("D"))
-								mode = MODE_SPITEFUL;
-								}
-							
-							isFirstTFTRound =false;
+									mode = MODE_SPITEFUL;
+							}
+
+							isFirstTFTRound = false;
 						} else if (mode == MODE_SPITEFUL) {
-							//Defeats till the very end
-							System.out.println("**TFT AGENT IN MODE SPITEFUL");
+							// Defeats till the very end
 							msg.setContent("Action#D");
 						}
 
@@ -169,8 +162,8 @@ public class TFT_Spiteful extends Agent {
 					// If INFORM RESULTS --> go to state 2
 					// Else error
 					if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Results#")) {
-						// Process results
-                        saveOpponentLastAction(msg); 
+						// Process results and save opponent actions
+						saveOpponentLastAction(msg);
 
 						state = State.s2Round;
 					} else {
@@ -181,14 +174,19 @@ public class TFT_Spiteful extends Agent {
 			}
 		}
 
-
+		/**
+		 * Stores the opponent last action
+		 * 
+		 * @param the message containing the actions for this round
+		 * 
+		 */
 		private void saveOpponentLastAction(ACLMessage msg) {
 			// format Results#4,7#D,C#5,0.
 			String msgContent = msg.getContent();
 			String[] contentSplit = msgContent.split("#");
 			String[][] playerIdsAndMoves = { { contentSplit[1].split(",")[0], contentSplit[1].split(",")[1] },
 					{ contentSplit[2].split(",")[0], contentSplit[2].split(",")[1] } };
-			
+
 			if (Integer.parseInt(playerIdsAndMoves[0][0]) == myId)
 				opponentLastActions.add(playerIdsAndMoves[1][1]);
 			else
@@ -196,10 +194,6 @@ public class TFT_Spiteful extends Agent {
 
 			return;
 		}
-
-
-
-
 
 		/**
 		 * Validates and extracts the parameters from the setup message

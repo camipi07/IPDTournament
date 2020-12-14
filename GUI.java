@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * @author camilo
+ *
+ */
 public final class GUI extends JFrame implements ActionListener {
 	JLabel leftPanelRoundsLabel;
 	JLabel leftPanelExtraInformation;
@@ -38,11 +42,11 @@ public final class GUI extends JFrame implements ActionListener {
 	private int numberOfGamesPlayed=0;
 	private JTable parameterTable;
 	
-	public GUI() {
+	public GUI() { //launch the GUI
 		initUI();
 	}
 	
-	public void updateNumberOfGames(int n) {
+	public void updateNumberOfGames(int n) { //sets the number of games that have been already played
 		if(n==0) 
 			this.numberOfGamesPlayed=0;
 		else
@@ -53,24 +57,30 @@ public final class GUI extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel(data, header);
 		parameterTable.setModel(model);
 	}
-	static int nCr(int n, int r)   
-	{   
+	
+	static int nCr(int n, int r){   //nCr for outputting the total number of games that will be played
 	    return fact(n) / (fact(r) *   
 	    fact(n - r));   
 	}   
-	static int fact(int n)   
+	static int fact(int n)   //factorial needed for nCR
 	{   
 	    int res = 1;   
 	           for (int i = 2; i <= n; i++)   
 	           res = res * i;   
 	          return res;   
 	} 
+	
 	public GUI(MainAgent agent) {
 		mainAgent = agent;
 		initUI();
 		loggingOutputStream = new LoggingOutputStream(rightPanelLoggingTextArea);
 	}
-
+	 /** Writes to the right panel console
+     * 
+     *
+     * @param the string to be written
+     * @return 
+     */
 	public void log(String s) {
 		Runnable appendLine = () -> {
 			rightPanelLoggingTextArea
@@ -88,6 +98,12 @@ public final class GUI extends JFrame implements ActionListener {
 		log(s + "\n");
 	}
 
+	 /**
+     * Adding players to the user interface
+     *
+     * @param the list of players in a String[]
+     * @return 
+     */
 	public void setPlayersUI(String[] players) {
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		for (String s : players) {
@@ -96,6 +112,12 @@ public final class GUI extends JFrame implements ActionListener {
 		list.setModel(listModel);
 	}
 
+	 /** Updates the statistics for the players in the UI
+     * 
+     *
+     * @param the Map containing all the player stats
+     * @return 
+     */
 	public void setPlayersStatisticsUI(HashMap<AID, PlayerStats> pS) {
 		String[] header = { "Id","Name", "Wins", "Loses", "Ties","Points" };
 
@@ -125,6 +147,9 @@ public final class GUI extends JFrame implements ActionListener {
 		return;
 
 	}
+	 /**
+     * Launch the UI
+     */
 
 	public void initUI() {
 		setTitle("GUI");
@@ -180,6 +205,7 @@ public final class GUI extends JFrame implements ActionListener {
 		return pane;
 	}
 
+	
 	private JPanel createLeftPanel() {
 
 		JLabel leftPanelRunTitle = new JLabel("Running Options");
@@ -401,6 +427,9 @@ public final class GUI extends JFrame implements ActionListener {
 		return centralTopSubpanel;
 	}
 
+	 /**
+     * The Statistics panel
+     */
 	private JPanel createCentralBottomSubpanel() {
 		JPanel centralBottomSubpanel = new JPanel(new GridBagLayout());
 
@@ -446,6 +475,10 @@ public final class GUI extends JFrame implements ActionListener {
 
 		return centralBottomSubpanel;
 	}
+	
+	 /**
+     * The right side panel with the console
+     */
 
 	private JPanel createRightPanel() {
 		rightPanel = new JPanel(new GridBagLayout());
@@ -461,7 +494,9 @@ public final class GUI extends JFrame implements ActionListener {
 		rightPanel.add(jScrollPane, c);
 		return rightPanel;
 	}
-
+	 /**
+     * The top bar for the UI
+     */
 	private JMenuBar createMainMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 

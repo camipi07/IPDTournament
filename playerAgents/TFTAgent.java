@@ -38,9 +38,6 @@ public class TFTAgent extends Agent {
 
 	}
 
-	protected void takeDown() {
-		System.out.println("RandomPlayer " + getAID().getName() + " terminating.");
-	}
 
 	private enum State {
 		s0NoConfig, s1AwaitingGame, s2Round, s3AwaitingResult
@@ -93,6 +90,9 @@ public class TFTAgent extends Agent {
 								System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
 							}
 							if (gameStarted) {
+								/**
+								 * Resets the parameters of the algorithm for the next game
+								 */
 								isFirstRound = true;
 								state = State.s2Round;
 								
@@ -112,12 +112,14 @@ public class TFTAgent extends Agent {
 					if (msg.getPerformative() == ACLMessage.REQUEST) {
 						ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 						msg.addReceiver(mainAgent);
+						
+						//TFT Action logic
 						if (isFirstRound) {
-							msg.setContent("Action#C");
+							msg.setContent("Action#C"); //cooperates
 							isFirstRound = false;
 						} else {
 
-							msg.setContent("Action#" + opponentLastAction);
+							msg.setContent("Action#" + opponentLastAction); //mimmicks the opponent
 						}
 
 						System.out.println(getAID().getName() + " sent " + msg.getContent());
@@ -144,6 +146,13 @@ public class TFTAgent extends Agent {
 				}
 			}
 		}
+		
+		/**
+		 * Stores the opponent last action
+		 * 
+		 * @param the message containing the actions for this round
+		 * 
+		 */
 
 		private void saveOpponentLastAction(ACLMessage msg) {
 			// format Results#4,7#D,C#5,0.

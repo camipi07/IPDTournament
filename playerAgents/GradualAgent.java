@@ -57,12 +57,8 @@ public class GradualAgent extends Agent {
 	private enum State {
 		s0NoConfig, s1AwaitingGame, s2Round, s3AwaitingResult
 	}
-    public void reset()
-    {
-        defectionCount = 0;
-        mode = MODE_NORMAL;
-        modeDuration = 0;
-    }
+	
+
     
 	private class Play extends CyclicBehaviour {
 		@Override
@@ -111,10 +107,13 @@ public class GradualAgent extends Agent {
 							} catch (NumberFormatException e) {
 								System.out.println(getAID().getName() + ":" + state.name() + " - Bad message");
 							}
+							
 							if (gameStarted) {
+								/**
+								 * Resets the parameters of the algorithm for the next game
+								 */
 								state = State.s2Round;
 								opponentLastActions = new ArrayList<String>();
-
 								defectionCount = 0;
 								mode = MODE_NORMAL;
 								modeDuration = 0;
@@ -132,7 +131,7 @@ public class GradualAgent extends Agent {
 						ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 						msg.addReceiver(mainAgent);
 
-						msg.setContent(getNextAction());
+						msg.setContent(getNextAction()); //sends the next action according to the algorithm
 						
 						
 						System.out.println(getAID().getName() + " sent " + msg.getContent());
@@ -194,6 +193,12 @@ public class GradualAgent extends Agent {
 		return true;
 	}
 	
+	/**
+	 * Stores the opponent last action
+	 * 
+	 * @param the message containing the actions for this round
+	 * 
+	 */
 	private void saveOpponentLastAction(ACLMessage msg) {
 		// format Results#4,7#D,C#5,0.
 		String msgContent = msg.getContent();
@@ -207,7 +212,12 @@ public class GradualAgent extends Agent {
 
 		return;
 	}
-	
+	/**
+	 * Obtains the next action according to the Gradual algorithm
+	 * 
+	 * 
+	 * @return the next action in the proper format
+	 */
 	private String getNextAction() {
 		
 	        int opponentLength = opponentLastActions.size();

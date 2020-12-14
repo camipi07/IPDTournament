@@ -109,6 +109,7 @@ public class Spiteful_CC extends Agent {
                             ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                             msg.addReceiver(mainAgent);
                             
+                            //Agent logic
                             if(current_round<2) {  //cooperate the first two rounds
     							msg.setContent("Action#C");
     						}else { //standard Spiteful behavior 
@@ -119,6 +120,7 @@ public class Spiteful_CC extends Agent {
     								msg.setContent("Action#D");
     						}
                             current_round++;
+                            
                             System.out.println(getAID().getName() + " sent " + msg.getContent());
                             send(msg);
                             state = State.s3AwaitingResult;
@@ -133,10 +135,11 @@ public class Spiteful_CC extends Agent {
                         //Else error
                     	if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Results#")) {
 
-
+                    		//if opponent defeated enter mode defeat till the end
                     		if (checkOpponentDefeat(msg) && (mode_defeat==false) ) {
-									mode_defeat = true;
+									mode_defeat = true; 
 							}
+                    		
                             state = State.s2Round;
                         } else {
                             System.out.println(getAID().getName() + ":" + state.name() + " - Unexpected message");
@@ -146,10 +149,16 @@ public class Spiteful_CC extends Agent {
             }
         }
     
+    /**
+     * Checks if opponent defeated in the last round
+     *
+     * @param msg ACLMessage to process
+     * @return true on if the opponent defeated, false in other case
+     */
     private boolean checkOpponentDefeat(ACLMessage msg) {
 		String msgContent = msg.getContent();
 		System.out.println("Checking message: "+msgContent);
-		if (msgContent.contains("D")) { //the opponent defeated, because i didn't
+		if (msgContent.contains("D")) { //implies that the opponent defeated, because i didn't
 			return true;
 		}else {
 			return false;
